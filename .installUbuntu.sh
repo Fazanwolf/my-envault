@@ -2,7 +2,7 @@
 
 phpUbuntu()
 {
-    apt install php8.0 libapache2-mod-php8.0
+    sudo apt install php8.0 libapache2-mod-php8.0
     systemctl restart apache2
 }
 

@@ -2,7 +2,7 @@
 
 phpFedora()
 {
-    sudo dnf install php8.0 libapache2-mod-php8.0
+    sudo dnf -y install php8.0 libapache2-mod-php8.0
     sudo systemctl restart apache2
 }
 

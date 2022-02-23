@@ -11,7 +11,11 @@ case $engine in
     *) echo "Sorry!! my-envault.sh does not support your operating system. See the README.md to try your installation by your own."
 esac
 
-NAME="my-envault-app"
+if [[ $# -eq 2 ]]; then
+    NAME="$1"
+else
+    NAME="my-envault-app"
+fi
 
 echo "Step 2/6: Importing application"
 cd ../
@@ -19,19 +23,19 @@ git clone git@github.com:envault/envault.git
 mkdir $NAME
 cd envault
 cp -rf `ls -A | grep -v ".git"` ../$NAME
-cp .gitignore .github ../$NAME
+cp -rf .gitignore .github ../$NAME
 cd ../$NAME
 rm -rf ../envault
-sed 's/mysql/pgsql/' .env > .env
 
 echo "Step 3/6: Initialize installation"
 git init
 touch Procfile
 echo "web: vendor/bin/heroku-php-apache2 public/" > Procfile
 cp .env.example .env
-sed "s/'default' => env('DB_CONNECTION', 'mysql')/'default' => env('DB_CONNECTION', 'pgsql')/" config/database.php > config/database.php
+sed -i 's/mysql/pgsql/' .env
+sed -i "s/'default' => env('DB_CONNECTION', 'mysql')/'default' => env('DB_CONNECTION', 'pgsql')/" config/database.php
 
-heroku create my-envault --region=eu
+heroku create $NAME --region=eu
 composer clearcache
 composer require laravel/sail:* --dev
 composer update --ignore-platform-reqs
@@ -67,9 +71,10 @@ heroku config:add DB_USERNAME=$DB_USERNAME
 heroku config:add DB_PASSWORD=$DB_PASSWORD
 
 echo "Step 6/6: Finish script installation"
-heroku run php artisan migrate
 git add .
 git commit -m "[Initialization]"
 git push heroku master
+
+heroku run php artisan migrate
 
 echo "Hold up! That not finish, you need to follow 'script_installation.md'"
