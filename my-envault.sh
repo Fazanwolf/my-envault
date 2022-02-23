@@ -22,13 +22,14 @@ cp -rf `ls -A | grep -v ".git"` ../$NAME
 cp .gitignore .github ../$NAME
 cd ../$NAME
 rm -rf ../envault
-sed '/mysql/pgsql/' .env > .env
+sed 's/mysql/pgsql/' .env > .env
 
 echo "Step 3/6: Initialize installation"
 git init
 touch Procfile
-echo "web: vendor/bin/heroku-php-apache2" > Procfile
+echo "web: vendor/bin/heroku-php-apache2 public/" > Procfile
 cp .env.example .env
+sed "s/'default' => env('DB_CONNECTION', 'mysql')/'default' => env('DB_CONNECTION', 'pgsql')/" config/database.php > config/database.php
 
 heroku create my-envault --region=eu
 composer clearcache
