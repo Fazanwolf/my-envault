@@ -39,6 +39,7 @@ heroku create $NAME --region=eu
 composer clearcache
 composer require laravel/sail:* --dev
 composer update --ignore-platform-reqs
+clear
 php artisan key:generate
 
 echo "Step 4/6: Setup Heroku App"

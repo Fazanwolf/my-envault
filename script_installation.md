@@ -1,4 +1,4 @@
-# Script installation of Envault on Heroku
+# Script installation of Envault    on Heroku
 
 ## Installation Guide
 #### Setup project:
